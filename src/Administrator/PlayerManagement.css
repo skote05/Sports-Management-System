@@ -1,0 +1,137 @@
+/* General styling */
+.player-management {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f5f7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+
+/* Layout Containers */
+.player-management-boxes {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.box {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 370px;
+  transition: all 0.3s ease;
+}
+
+.box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Form field and input styling */
+.form-field {
+  margin-bottom: 15px;
+}
+
+label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+input:focus {
+  border-color: #0072ff;
+  outline: none;
+}
+
+button {
+  padding: 12px 20px;
+  background-color: #0072ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #005bb5;
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  width: 100%;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  list-style-type: none;
+  padding: 0;
+}
+
+.player-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.player-item:hover {
+  background-color: #f0f0f0;
+}
+
+.player-details {
+  margin-top: 20px;
+}
+
+.player-details h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.player-details p {
+  margin: 5px 0;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .player-management-boxes {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .box {
+    max-width: 100%;
+  }
+}

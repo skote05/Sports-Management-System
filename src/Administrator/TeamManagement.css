@@ -1,0 +1,134 @@
+/* General styling */
+.schedule-management {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f5f7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    overflow: hidden;  /* Ensure no overflow */
+  }
+  
+  /* Layout Containers */
+  .schedule-management-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    margin-top: 20px;
+  }
+  
+  /* Each box */
+  .box {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px;
+    transition: all 0.3s ease;
+    flex: 1 1 300px;
+  }
+  
+  .box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+  
+  h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Specific to the event list */
+  .event-list-box .search-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 10px; /* Reduce the gap between heading and search field */
+    margin-bottom: 15px; /* Slightly reduce the gap after search field */
+  }
+  
+  /* Form field and input styling */
+  .form-field {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  input[type="text"], input[type="date"], input[type="time"], input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  input:focus {
+    border-color: #0072ff;
+    outline: none;
+  }
+  
+  /* Button Styling */
+  button {
+    padding: 12px 20px;
+    background-color: #0072ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+  }
+  
+  .delete-btn {
+    background-color: #dc3545;
+    width: 100%;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+  
+  /* Responsive Layout - Adjusting boxes for smaller screens */
+  @media (max-width: 768px) {
+    .schedule-management-boxes {
+      flex-direction: column; /* Stack boxes vertically on small screens */
+      gap: 15px; /* Adjust gap for better stacking */
+    }
+  
+    .box {
+      max-width: 100%;  /* Allow boxes to take up full width on small screens */
+      flex: 1;  /* Allow them to expand to full width */
+    }
+  }
+  /* Layout Containers */
+.team-management-boxes{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    margin-top: 10px; /* Added margin-top to move the boxes down */
+  }
+  
+  
