@@ -1,93 +1,98 @@
 /* General Styling */
 .schedule-view {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f7fc;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; /* Ensure heading is above the table */
-  }
-  
-  /* Heading Style */
-  .schedule-view-heading {
-    font-size: 2.5rem;
-    color: #34495e;
-    text-align: center;
-    margin-bottom: 30px; /* Space between heading and table */
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  /* Container for the event schedule table */
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Ensure heading is above the table */
+}
+
+/* Heading Style */
+.schedule-view-heading {
+  font-size: 2.5rem;
+  color: #34495e;
+  text-align: center;
+  margin-bottom: 30px; /* Space between heading and table */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Container for the event schedule table */
+.schedule-view-container {
+  width: 100%;
+  max-width: 1100px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Hide horizontal overflow outside the container */
+}
+
+/* Scrollable Wrapper for the Table */
+.schedule-table-wrapper {
+  width: 100%;
+  overflow-x: auto;  /* Enable horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+/* Table Styles */
+.schedule-table {
+  width: 100%;
+  min-width: 900px;  /* Ensure the table doesn't shrink too much */
+  border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.schedule-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.schedule-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.schedule-table tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.schedule-table tr:hover {
+  background-color: #e7f1ff;
+}
+
+.schedule-table td {
+  color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .schedule-view-container {
-    width: 100%;
-    max-width: 1100px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    box-sizing: border-box;
+      padding: 20px;
   }
-  
-  /* Table Styles */
-  .schedule-box {
-    width: 100%;
+
+  .schedule-view-heading {
+      font-size: 2rem;
   }
-  
-  .schedule-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
+
   .schedule-table th,
   .schedule-table td {
-    padding: 15px;
-    border: 1px solid #ddd;
-    text-align: left;
-    font-size: 1rem;
-  }
-  
-  .schedule-table th {
-    background-color: #007bff;
-    color: white;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  
-  .schedule-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .schedule-table tr:nth-child(odd) {
-    background-color: #fff;
-  }
-  
-  .schedule-table tr:hover {
-    background-color: #e7f1ff;
-  }
-  
-  .schedule-table td {
-    color: #555;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .schedule-view-container {
-      padding: 20px;
-    }
-  
-    .schedule-view-heading {
-      font-size: 2rem;
-    }
-  
-    .schedule-table th,
-    .schedule-table td {
       font-size: 0.9rem;
       padding: 12px;
-    }
   }
-  
+}

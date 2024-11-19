@@ -35,12 +35,12 @@ const ScheduleManagement = () => {
 
     const handleScheduleGame = async (e) => {
         e.preventDefault();
-    
+
         if (!teamA || !teamB || !date || !time || !location || !sportID) {
             setErrorMessage('Please fill in all fields.');
             return;
         }
-    
+
         const gameData = {
             teamA_ID: teamA,
             teamB_ID: teamB,
@@ -49,7 +49,7 @@ const ScheduleManagement = () => {
             location,
             sport_ID: sportID,
         };
-    
+
         try {
             const response = await fetch('http://localhost:5001/api/schedulegame', {
                 method: 'POST',
@@ -58,13 +58,20 @@ const ScheduleManagement = () => {
                 },
                 body: JSON.stringify(gameData),
             });
-    
+
             const result = await response.json();
             console.log(result); // Log the backend response for debugging
-    
+
             if (response.status === 200) {
-                setSuccessMessage('Game scheduled successfully!');
+                // Create a success message with teams, date, and time
+                const successMessage = `Game scheduled successfully! ${teams.find(t => t.Team_ID === teamA)?.Team_Name} vs ${teams.find(t => t.Team_ID === teamB)?.Team_Name} on ${date} at ${time}.`;
+                
+                // Show success message
+                setSuccessMessage(successMessage);
                 setErrorMessage('');
+
+                // Show an alert with the same information
+                alert(successMessage);
             } else {
                 // If there's a conflict or any other error, show the error message from the backend
                 setErrorMessage(result.message || 'Error scheduling the game.');

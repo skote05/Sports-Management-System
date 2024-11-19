@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Team (
 );
 
 -- Create Match Table
-CREATE TABLE IF NOT EXISTS Match (
+CREATE TABLE IF NOT EXISTS `Match` (
     Match_ID INT AUTO_INCREMENT PRIMARY KEY,
     Date_of_match DATE,
     Location VARCHAR(100),
@@ -91,16 +91,28 @@ CREATE TABLE IF NOT EXISTS Player (
     Phone_no VARCHAR(15)
 );
 
--- Create Stats Table
+-- Create Stats Table with added column for distinguishing Player and Team stats
 CREATE TABLE IF NOT EXISTS Stats (
     Stat_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Player_ID INT,
+    Player_ID INT NULL,
+    Team_ID INT NULL,
     Sport_ID INT,
-    Wins INT,
-    Points_scored INT,
-    Goals_scored INT,
+    Wins INT DEFAULT 0,
+    Points_scored INT DEFAULT 0,
+    Goals_scored INT DEFAULT 0,
+    Stat_Type VARCHAR(10) CHECK (Stat_Type IN ('Player', 'Team')), -- To distinguish between Player and Team stats
     FOREIGN KEY (Player_ID) REFERENCES Player(Player_ID),
+    FOREIGN KEY (Team_ID) REFERENCES Team(Team_ID),
     FOREIGN KEY (Sport_ID) REFERENCES Sport(Sport_ID)
+);
+
+-- Create logs_in Table with only login_id and player_id as foreign keys
+CREATE TABLE IF NOT EXISTS logs_in (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    login_id INT,   -- Foreign key referencing the Login table
+    player_id INT,  -- Foreign key referencing the Player table
+    FOREIGN KEY (login_id) REFERENCES Login(ID),    -- Link to Login table
+    FOREIGN KEY (player_id) REFERENCES Player(Player_ID)  -- Link to Player table
 );
 
 -- Create Payment Table
@@ -167,7 +179,7 @@ CREATE TABLE IF NOT EXISTS Involves (
     PRIMARY KEY (Tournament_ID, Match_ID)
 );
 
-CREATE TABLE IF NOT EXISTS Match_Teams (
+CREATE TABLE IF NOT EXISTS `Match_Teams` (
     Match_Team_ID INT AUTO_INCREMENT PRIMARY KEY,
     Match_ID INT,
     Team_ID INT,
@@ -197,7 +209,7 @@ VALUES ('admin', 'adminpassword', 'admin');
 DELIMITER $$
 
 CREATE TRIGGER update_player_stats_after_match
-AFTER UPDATE ON Match
+AFTER UPDATE ON `Match`
 FOR EACH ROW
 BEGIN
     DECLARE player_id INT;
@@ -522,7 +534,7 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE TRIGGER check_schedule_conflict
-BEFORE INSERT ON Match
+BEFORE INSERT ON `Match`
 FOR EACH ROW
 BEGIN
   DECLARE conflict INT;
@@ -592,3 +604,268 @@ VALUES
 (2, 2),  -- Emily Davis plays for Hoopsters (Team_ID = 2, Player_ID = 2)
 (1, 3),  -- Michael Brown plays for Red Devils (Team_ID = 1, Player_ID = 3)
 (2, 4);  -- Sophia Lee plays for Hoopsters (Team_ID = 2, Player_ID = 4)
+
+-- Insert Data into Team Table (with Sport_IDs 1 and 2)
+INSERT INTO Team (Team_ID, Team_name, Max_Team_Size, Sport_ID)
+VALUES 
+(3, 'Strikers', 15, 1),     -- Sport_ID = 1 (Football)
+(4, 'Blaze', 15, 2),        -- Sport_ID = 2 (Basketball)
+(5, 'Wizards', 20, 1),      -- Sport_ID = 1 (Football)
+(6, 'Lions', 15, 2),        -- Sport_ID = 2 (Basketball)
+(7, 'Falcons', 22, 1),      -- Sport_ID = 1 (Football)
+(8, 'Sharks', 15, 2),       -- Sport_ID = 2 (Basketball)
+(9, 'Eagles', 15, 1),       -- Sport_ID = 1 (Football)
+(10, 'Titans', 20, 2);      -- Sport_ID = 2 (Basketball)
+
+-- Insert Data into Player Table (starting with Player_ID = 15)
+INSERT INTO Player (Player_ID, Player_Name, DOB, Gender, Position, Age, Email, Phone_no)
+VALUES 
+(15, 'David Johnson', '1995-06-20', 'Male', 'Forward', 29, 'davidjohnson@example.com', '555-0001'),
+(16, 'Emily Davis', '2000-11-10', 'Female', 'Guard', 24, 'emilydavis@example.com', '555-0002'),
+(17, 'Michael Brown', '1992-02-18', 'Male', 'Midfielder', 32, 'michaelbrown@example.com', '555-0003'),
+(18, 'Sophia Lee', '1997-05-25', 'Female', 'Center', 27, 'sophialee@example.com', '555-0004'),
+(19, 'Jack Williams', '1994-06-10', 'Male', 'Striker', 30, 'jackwilliams@example.com', '555-0005'),
+(20, 'Lucas Brown', '1998-08-15', 'Male', 'Defender', 26, 'lucasbrown@example.com', '555-0006'),
+(21, 'Olivia Green', '2001-09-20', 'Female', 'Goalkeeper', 23, 'oliviagreen@example.com', '555-0007'),
+(22, 'James Miller', '1996-02-05', 'Male', 'Midfielder', 28, 'jamesmiller@example.com', '555-0008'),
+(23, 'Ava Smith', '1999-07-12', 'Female', 'Forward', 25, 'avasmith@example.com', '555-0009'),
+(24, 'Mason Taylor', '1993-11-30', 'Male', 'Striker', 31, 'masontaylor@example.com', '555-0010');
+
+-- Insert Data into Plays_for Table (Player_IDs and Team_IDs)
+INSERT INTO Plays_for (Team_ID, Player_ID)
+VALUES 
+(1, 15),  -- David Johnson plays for Red Devils
+(2, 16),  -- Emily Davis plays for Hoopsters
+(1, 17),  -- Michael Brown plays for Red Devils
+(2, 18),  -- Sophia Lee plays for Hoopsters
+(3, 19),  -- Jack Williams plays for Strikers
+(4, 20),  -- Lucas Brown plays for Blaze
+(5, 21),  -- Olivia Green plays for Wizards
+(6, 22),  -- James Miller plays for Lions
+(7, 23),  -- Ava Smith plays for Falcons
+(8, 24);  -- Mason Taylor plays for Sharks
+
+-- Insert Data into Stats Table (without the Stat_ID field)
+INSERT INTO Stats (Player_ID, Team_ID, Sport_ID, Wins, Points_scored, Goals_scored, Stat_Type)
+VALUES 
+(15, 1, 1, 10, 30, 10, 'Player'),  -- David Johnson's stats for Red Devils (Football)
+(16, 2, 2, 12, 25, 5, 'Player'),  -- Emily Davis's stats for Hoopsters (Basketball)
+(17, 1, 1, 15, 40, 12, 'Player'),  -- Michael Brown's stats for Red Devils (Football)
+(18, 2, 2, 8, 18, 3, 'Player'),   -- Sophia Lee's stats for Hoopsters (Basketball)
+(19, 3, 1, 9, 35, 15, 'Player'),  -- Jack Williams's stats for Strikers (Football)
+(20, 4, 2, 10, 22, 4, 'Player'),  -- Lucas Brown's stats for Blaze (Basketball)
+(21, 5, 1, 13, 20, 7, 'Player'),  -- Olivia Green's stats for Wizards (Football)
+(22, 6, 2, 14, 30, 9, 'Player'),  -- James Miller's stats for Lions (Basketball)
+(23, 7, 1, 11, 32, 10, 'Player'), -- Ava Smith's stats for Falcons (Football)
+(24, 8, 2, 7, 16, 2, 'Player');   -- Mason Taylor's stats for Sharks (Basketball)
+
+--Latest trigger that updates stats of player after the match
+DELIMITER $$
+
+CREATE TRIGGER update_player_stats_after_match
+AFTER UPDATE ON `Match`
+FOR EACH ROW
+BEGIN
+    DECLARE team1_id INT;
+    DECLARE team2_id INT;
+    DECLARE goals_scored INT;
+    DECLARE points_scored INT;
+    
+    -- Dynamically fetch the goals scored (assuming score is in the format "team1_goals-team2_goals")
+    SET goals_scored = CAST(SUBSTRING_INDEX(NEW.Score, '-', 1) AS UNSIGNED);  -- Goals scored by team1
+    SET points_scored = CAST(SUBSTRING_INDEX(NEW.Score, '-', -1) AS UNSIGNED); -- Goals scored by team2
+
+    -- Get the Team_IDs from the Match_Teams table based on the Match_ID
+    SELECT Team_ID INTO team1_id FROM Match_Teams WHERE Match_ID = NEW.Match_ID AND Team_ID = 1 LIMIT 1; -- Team 1
+    SELECT Team_ID INTO team2_id FROM Match_Teams WHERE Match_ID = NEW.Match_ID AND Team_ID = 2 LIMIT 1; -- Team 2
+
+    -- Update Stats for Team 1 players
+    -- Loop through all players in Team 1 and update stats
+    UPDATE Stats
+    SET Wins = Wins + 1,
+        Points_scored = Points_scored + points_scored,
+        Goals_scored = Goals_scored + goals_scored
+    WHERE Player_ID IN (SELECT Player_ID FROM Plays_for WHERE Team_ID = team1_id)
+    AND Stat_Type = 'Player';
+
+    -- Update Stats for Team 2 players
+    -- Loop through all players in Team 2 and update stats
+    UPDATE Stats
+    SET Wins = Wins + 1,
+        Points_scored = Points_scored + points_scored,
+        Goals_scored = Goals_scored + goals_scored
+    WHERE Player_ID IN (SELECT Player_ID FROM Plays_for WHERE Team_ID = team2_id)
+    AND Stat_Type = 'Player';
+
+END $$
+
+DELIMITER ;
+
+
+-- Inserting Login details for all players (starting from ID 20)
+INSERT INTO Login (Username, Password, Account_Type)
+VALUES
+('DavidJohnson', 'password123', 'player'),  -- Player ID 1
+('EmilyDavis', 'password123', 'player'),    -- Player ID 2
+('MichaelBrown', 'password123', 'player'),  -- Player ID 3
+('SophiaLee', 'password123', 'player'),     -- Player ID 4
+('JackWilliams', 'password123', 'player'),  -- Player ID 5
+('LucasBrown', 'password123', 'player'),    -- Player ID 6
+('OliviaGreen', 'password123', 'player'),   -- Player ID 7
+('JamesMiller', 'password123', 'player'),   -- Player ID 8
+('AvaSmith', 'password123', 'player'),      -- Player ID 9
+('MasonTaylor', 'password123', 'player');   -- Player ID 10
+
+-- Create a View to get Player and Team Stats together
+CREATE VIEW PlayerTeamStats AS
+SELECT 
+    p.Player_ID,
+    p.Player_Name,
+    t.Team_name,
+    s.Sport_Name,
+    st.Wins,
+    st.Points_scored,
+    st.Goals_scored,
+    st.Stat_Type
+FROM Stats st
+JOIN Player p ON st.Player_ID = p.Player_ID
+JOIN Team t ON st.Team_ID = t.Team_ID
+JOIN Sport s ON st.Sport_ID = s.Sport_ID;
+
+-- Insert for Player "David Johnson" (Player_ID 1) and Login "David Johnson" (Login_ID 1)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'David Johnson';
+
+-- Insert for Player "Emily Davis" (Player_ID 2) and Login "Emily Davis" (Login_ID 2)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Emily Davis';
+
+-- Insert for Player "Michael Brown" (Player_ID 3) and Login "Michael Brown" (Login_ID 3)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Michael Brown';
+
+-- Insert for Player "Sophia Lee" (Player_ID 4) and Login "Sophia Lee" (Login_ID 4)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Sophia Lee';
+
+-- Insert for Player "Sanathashree" (Player_ID 5) and Login "Sanathashree" (Login_ID 5)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Sanathashree';
+
+-- Insert for Player "Player One" (Player_ID 6) and Login "Player One" (Login_ID 6)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Player One';
+
+-- Insert for Player "Player Two" (Player_ID 7) and Login "Player Two" (Login_ID 7)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Player Two';
+
+-- Insert for Player "nmb" (Player_ID 8) and Login "nmb" (Login_ID 8)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'nmb';
+
+-- Insert for Player "David Johnson" (Player_ID 15) and Login "David Johnson" (Login_ID 15)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'David Johnson';
+
+-- Insert for Player "Emily Davis" (Player_ID 16) and Login "Emily Davis" (Login_ID 16)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Emily Davis';
+
+-- Insert for Player "Michael Brown" (Player_ID 17) and Login "Michael Brown" (Login_ID 17)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Michael Brown';
+
+-- Insert for Player "Sophia Lee" (Player_ID 18) and Login "Sophia Lee" (Login_ID 18)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Sophia Lee';
+
+-- Insert for Player "Jack Williams" (Player_ID 19) and Login "Jack Williams" (Login_ID 19)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Jack Williams';
+
+-- Insert for Player "Lucas Brown" (Player_ID 20) and Login "Lucas Brown" (Login_ID 20)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Lucas Brown';
+
+-- Insert for Player "Olivia Green" (Player_ID 21) and Login "Olivia Green" (Login_ID 21)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Olivia Green';
+
+-- Insert for Player "James Miller" (Player_ID 22) and Login "James Miller" (Login_ID 22)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'James Miller';
+
+-- Insert for Player "Ava Smith" (Player_ID 23) and Login "Ava Smith" (Login_ID 23)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Ava Smith';
+
+-- Insert for Player "Mason Taylor" (Player_ID 24) and Login "Mason Taylor" (Login_ID 24)
+INSERT INTO logs_in (login_id, player_id)
+SELECT l.ID, p.Player_ID 
+FROM Login l
+JOIN Player p ON l.Username = p.Player_Name
+WHERE l.Username = 'Mason Taylor';
+
+
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('1', '4', '15');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('2', '5', '16');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('3', '6', '17');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('4', '7', '18');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('5', '8', '19');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('6', '9', '20');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('7', '10', '21');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('8', '11', '22');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('9', '12', '23');
+INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('10', '13', '24');

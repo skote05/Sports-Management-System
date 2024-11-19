@@ -1,0 +1,57 @@
+.payment-processing {
+    width: 300px;
+    margin: 20px auto;
+  }
+  
+  .card-payment-form,
+  .upi-payment-form {
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  .transaction-status.success {
+    color: green;
+  }
+  
+  .transaction-status.fail {
+    color: red;
+  }
+  .amount-selection {
+    margin-bottom: 20px;
+  }
+  
+  .amount-selection label {
+    font-size: 16px;
+  }
+  
+  .amount-selection div {
+    margin: 5px 0;
+  }
+  
+  button + button {
+    margin-top: 10px;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  

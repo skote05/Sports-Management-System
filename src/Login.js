@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css'; // Assuming you already have some styling
+import './Login.css'; // Assuming you have some basic styling
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -9,7 +9,7 @@ const Login = () => {
 
     // Handle login for player or admin
     const handleLogin = async (e) => {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault();
 
         if (!username || !password || !role) {
             setErrorMessage('Please fill in all fields.');
@@ -34,6 +34,11 @@ const Login = () => {
             const result = await response.json();
 
             if (response.status === 200) {
+                // Store loginId and username in localStorage
+                localStorage.setItem('loginId', result.user.Login_ID);   // Store login ID
+                localStorage.setItem('username', result.user.Username);   // Store username
+
+                // Redirect based on account type
                 if (role === 'player') {
                     window.location.href = '/playerdashboard';
                 } else if (role === 'admin') {

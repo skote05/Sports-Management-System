@@ -6,6 +6,11 @@ import PlayerDashboard from './PlayerDashboard'; // Import Player Dashboard
 import Register from './Register'; // Import Register component
 import ScheduleManagement from './Administrator/ScheduleManagement';  // Import Admin Schedule Management // Import Player Schedule View
 import './App.css';
+import PlayerStats from './Player/PlayerStats';
+import TeamStats from './Player/TeamStats';
+import PaymentProcessing from './Player/PaymentProcessing';
+import ScheduleView from './Player/ScheduleView';
+import TeamManagement from './Administrator/TeamManagement';
 
 const App = () => {
     return (
@@ -16,7 +21,11 @@ const App = () => {
                     <Route path="/register" element={<Register />} />
                     <Route path="/admindashboard" element={<AdminDashboard />} />
                     <Route path="/playerdashboard" element={<PlayerDashboard />} />
-
+                    <Route path="/playerstats" element={<PlayerStats />} />
+                    <Route path="/teamstats" element={<TeamStats />} />
+                    <Route path="/paymentprocessing" element={<PaymentProcessing />} />
+                    <Route path="/scheduleview" element={<ScheduleView />} />
+                    <Route path="/teammanagement" element={<TeamManagement />} />
                     {/* Admin route for Schedule Management */}
                     <Route path="/schedulemanagement" element={<ScheduleManagement />} />
 
