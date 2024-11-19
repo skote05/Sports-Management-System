@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   };
 
   const handleGoToTeamManagement = () => {
-    navigate('/teammanagement'); // Navigate to Team Management
+    navigate('/createteam'); // Navigate to Team Management
   };
 
   const handleGoToReportsManagement = () => {

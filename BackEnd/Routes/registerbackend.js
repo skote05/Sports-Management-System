@@ -1,4 +1,3 @@
-// registerbackend.js
 const express = require('express');
 const db = require('../db'); // Import database connection
 const router = express.Router();
@@ -6,12 +5,26 @@ const router = express.Router();
 // Middleware to parse JSON requests
 router.use(express.json());
 
+// Route to fetch all sports
+router.get('/sports', async (req, res) => {
+    const connection = await db.getConnection();
+    try {
+        const [sports] = await connection.query('SELECT * FROM Sport');
+        res.status(200).json({ sports }); // Return the sports list
+    } catch (err) {
+        console.error('Error fetching sports:', err);
+        res.status(500).json({ message: 'Error fetching sports.' });
+    } finally {
+        connection.release();
+    }
+});
+
 // Route to handle player registration
 router.post('/register', async (req, res) => {
-    const { username, password, email, phone_no, dob, gender } = req.body;
+    const { username, password, email, phone_no, dob, gender, sport_id } = req.body;
 
     // Basic validation
-    if (!username || !password || !email || !phone_no || !dob || !gender) {
+    if (!username || !password || !email || !phone_no || !dob || !gender || !sport_id) {
         return res.status(400).json({ message: 'Please fill in all fields.' });
     }
 
@@ -32,15 +45,23 @@ router.post('/register', async (req, res) => {
             [username, password, 'player']
         );
 
-        const userId = insertLoginResult.insertId; // Get the inserted User_ID from Login table
+        const loginId = insertLoginResult.insertId; // Get the inserted login ID from Login table
 
-        // Step 3: Insert into the Player table, using the User_ID
+        // Step 3: Insert new player into the Player table with Sport_ID
         const [insertPlayerResult] = await connection.query(
-            'INSERT INTO Player (Player_Name, Email, Phone_no, DOB, Gender, User_ID) VALUES (?, ?, ?, ?, ?, ?)',
-            [username, email, phone_no, dob, gender, userId]
+            'INSERT INTO Player (Player_Name, Email, Phone_no, DOB, Gender, Sport_ID) VALUES (?, ?, ?, ?, ?, ?)',
+            [username, email, phone_no, dob, gender, sport_id]
         );
 
-        // Step 4: Commit the transaction if both queries succeed
+        const playerId = insertPlayerResult.insertId; // Get the inserted player ID from Player table
+
+        // Step 4: Insert into logs_in table to link player with login
+        await connection.query(
+            'INSERT INTO logs_in (login_id, player_id) VALUES (?, ?)',
+            [loginId, playerId]
+        );
+
+        // Step 5: Commit the transaction if all queries succeed
         await connection.commit(); // Commit transaction
         res.status(201).json({ message: 'Registration successful!' });
 
@@ -52,5 +73,6 @@ router.post('/register', async (req, res) => {
         connection.release(); // Release the connection back to the pool
     }
 });
+
 
 module.exports = router;

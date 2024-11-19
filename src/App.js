@@ -11,6 +11,7 @@ import TeamStats from './Player/TeamStats';
 import PaymentProcessing from './Player/PaymentProcessing';
 import ScheduleView from './Player/ScheduleView';
 import TeamManagement from './Administrator/TeamManagement';
+import CreateTeamForm from './Administrator/CreateTeamForm';
 
 const App = () => {
     return (
@@ -26,6 +27,7 @@ const App = () => {
                     <Route path="/paymentprocessing" element={<PaymentProcessing />} />
                     <Route path="/scheduleview" element={<ScheduleView />} />
                     <Route path="/teammanagement" element={<TeamManagement />} />
+                    <Route path="/createteam" element={<CreateTeamForm />} />
                     {/* Admin route for Schedule Management */}
                     <Route path="/schedulemanagement" element={<ScheduleManagement />} />
 

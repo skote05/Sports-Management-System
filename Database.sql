@@ -90,6 +90,14 @@ CREATE TABLE IF NOT EXISTS Player (
     Age INT,
     Phone_no VARCHAR(15)
 );
+ALTER TABLE Player ADD COLUMN Sport_ID INT;
+ALTER TABLE Player 
+ADD CONSTRAINT FK_Player_Sport
+FOREIGN KEY (Sport_ID) 
+REFERENCES Sport(Sport_ID)
+ON DELETE SET NULL
+ON UPDATE CASCADE;
+
 
 -- Create Stats Table with added column for distinguishing Player and Team stats
 CREATE TABLE IF NOT EXISTS Stats (
@@ -577,6 +585,15 @@ VALUES
 (1, 'Football', 'Team Sport'),   -- Sport_ID = 1
 (2, 'Basketball', 'Team Sport');  -- Sport_ID = 2
 
+INSERT INTO Sport (Sport_Name, Sport_Type)
+VALUES
+('Baseball', 'Team Sport'),
+('Tennis', 'Individual Sport'),
+('Badminton', 'Individual Sport'),
+('Table Tennis', 'Individual Sport'),
+('Cricket', 'Team Sport'),
+('Rugby', 'Team Sport'),
+('Hockey', 'Team Sport'),
 -- Inserting data into Coach Table (with explicit Coach_IDs)
 INSERT INTO Coach (Coach_ID, Coach_Name, DOB, Years_of_Experience, Email, Phone_no)
 VALUES 
@@ -658,6 +675,13 @@ VALUES
 (22, 6, 2, 14, 30, 9, 'Player'),  -- James Miller's stats for Lions (Basketball)
 (23, 7, 1, 11, 32, 10, 'Player'), -- Ava Smith's stats for Falcons (Football)
 (24, 8, 2, 7, 16, 2, 'Player');   -- Mason Taylor's stats for Sharks (Basketball)
+
+
+-- Update Player's Sport_ID based on their Team_ID from the Plays_for table
+UPDATE Player p
+JOIN Plays_for pf ON p.Player_ID = pf.Player_ID
+JOIN Team t ON pf.Team_ID = t.Team_ID
+SET p.Sport_ID = t.Sport_ID;
 
 --Latest trigger that updates stats of player after the match
 DELIMITER $$
@@ -869,3 +893,135 @@ INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_
 INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('8', '11', '22');
 INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('9', '12', '23');
 INSERT INTO `sports_management_system`.`logs_in` (`log_id`, `login_id`, `player_id`) VALUES ('10', '13', '24');
+
+DELIMITER $$
+
+CREATE PROCEDURE CreateTeamWithPlayers(
+    IN Team_Name VARCHAR(100),
+    IN Max_Team_Size INT,
+    IN Sport_ID INT,
+    IN Player_Ids JSON
+)
+BEGIN
+    DECLARE New_Team_ID INT;
+    DECLARE Player_Count INT;
+    DECLARE Player_ID INT;
+
+    -- Initialize session variable @Index to 0
+    SET @Index = 0;
+
+    -- Create the team and get the new Team_ID
+    INSERT INTO Team (Team_name, Max_Team_Size, Sport_ID)
+    VALUES (Team_Name, Max_Team_Size, Sport_ID);
+    
+    -- Get the newly inserted Team_ID (last inserted ID)
+    SET New_Team_ID = LAST_INSERT_ID();
+
+    -- Get the number of players provided in the JSON array
+    SET Player_Count = JSON_LENGTH(Player_Ids);
+
+    -- Loop through each player ID and assign to the newly created team
+    WHILE @Index < Player_Count DO
+        -- Extract Player_ID from the JSON array
+        SET Player_ID = JSON_UNQUOTE(JSON_EXTRACT(Player_Ids, CONCAT('$[', @Index, ']')));
+        
+        -- Insert into Plays_for table to link player to the new team
+        INSERT INTO Plays_for (Team_ID, Player_ID)
+        VALUES (New_Team_ID, Player_ID);
+
+        -- Move to the next player in the array
+        SET @Index = @Index + 1;
+    END WHILE;
+    
+    -- Return the created team ID
+    SELECT New_Team_ID AS Team_ID;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER before_insert_team
+BEFORE INSERT ON Team
+FOR EACH ROW
+BEGIN
+    -- Check if the associated sport is an individual sport
+    DECLARE sport_type VARCHAR(50);
+    
+    -- Get the sport type based on the Sport_ID
+    SELECT Sport_Type INTO sport_type
+    FROM Sport
+    WHERE Sport_ID = NEW.Sport_ID;
+
+    -- If the sport is an individual sport, set Max_Team_Size to 1
+    IF sport_type = 'Individual Sport' THEN
+        SET NEW.Max_Team_Size = 1;
+    END IF;
+END $$
+
+DELIMITER ;
+
+-- Football (Sport_ID = 1)
+INSERT INTO Player (Player_Name, DOB, Gender, Position, Age, Email, Phone_no, Sport_ID)
+VALUES
+('John Carter', '1992-08-15', 'Male', 'Striker', 32, 'johncarter@example.com', '5551234567', 1),
+('Sarah Evans', '1997-12-05', 'Female', 'Midfielder', 27, 'sarahevans@example.com', '5552345678', 1),
+('Brian Clark', '1995-02-23', 'Male', 'Defender', 29, 'brianclark@example.com', '5553456789', 1),
+('Jessica King', '1998-04-02', 'Female', 'Goalkeeper', 26, 'jessicaking@example.com', '5554567890', 1),
+('Chris White', '1994-10-12', 'Male', 'Forward', 30, 'chriswhite@example.com', '5555678901', 1),
+
+-- Basketball (Sport_ID = 2)
+('Robert Hall', '1996-07-25', 'Male', 'Guard', 28, 'roberthall@example.com', '5556789012', 2),
+('Megan Foster', '2000-01-10', 'Female', 'Forward', 24, 'meganfoster@example.com', '5557890123', 2),
+('William Harris', '1995-03-20', 'Male', 'Center', 29, 'williamharris@example.com', '5558901234', 2),
+('Olivia Scott', '1997-09-30', 'Female', 'Guard', 27, 'oliviascott@example.com', '5559012345', 2),
+('Liam Adams', '2001-05-16', 'Male', 'Forward', 23, 'liamadams@example.com', '5550123456', 2),
+
+-- Baseball (Sport_ID = 3)
+('George Lewis', '1993-11-22', 'Male', 'Pitcher', 31, 'georgelewis@example.com', '5551234567', 3),
+('Grace Wilson', '2000-02-12', 'Female', 'Catcher', 24, 'gracewilson@example.com', '5552345678', 3),
+('Henry Thompson', '1998-03-05', 'Male', 'Shortstop', 26, 'henrythompson@example.com', '5553456789', 3),
+('Emma Turner', '1995-12-30', 'Female', 'Outfielder', 29, 'emmaturner@example.com', '5554567890', 3),
+('David Mitchell', '1997-04-08', 'Male', 'First Baseman', 27, 'davidmitchell@example.com', '5555678901', 3),
+
+-- Tennis (Sport_ID = 4)
+('Roger Federer', '1981-08-08', 'Male', 'Singles', 43, 'rogerfederer@example.com', '5556789012', 4),
+('Serena Williams', '1981-09-26', 'Female', 'Singles', 43, 'serenawilliams@example.com', '5557890123', 4),
+('Naomi Osaka', '1997-10-16', 'Female', 'Singles', 27, 'naomiosaka@example.com', '5558901234', 4),
+('Rafael Nadal', '1986-06-03', 'Male', 'Singles', 38, 'rafaelnadal@example.com', '5559012345', 4),
+('Novak Djokovic', '1987-05-22', 'Male', 'Singles', 37, 'novakdjokovic@example.com', '5550123456', 4),
+
+-- Swimming (Sport_ID = 5)
+('Michael Phelps', '1985-06-30', 'Male', 'Freestyle', 39, 'michaelphelps@example.com', '5551234567', 5),
+('Katie Ledecky', '1997-03-17', 'Female', 'Freestyle', 27, 'katieledecky@example.com', '5552345678', 5),
+('Caeleb Dressel', '1996-08-16', 'Male', 'Butterfly', 28, 'caelebdressel@example.com', '5553456789', 5),
+('Simone Manuel', '1996-08-02', 'Female', 'Freestyle', 28, 'simonemanuel@example.com', '5554567890', 5),
+('Ryan Lochte', '1984-08-03', 'Male', 'Backstroke', 40, 'ryanlochte@example.com', '5555678901', 5),
+
+-- Cricket (Sport_ID = 6)
+('Virat Kohli', '1988-11-05', 'Male', 'Batsman', 36, 'viratkohli@example.com', '5556789012', 6),
+('Mithali Raj', '1982-12-03', 'Female', 'Batsman', 42, 'mithaliraj@example.com', '5557890123', 6),
+('Ben Stokes', '1991-06-04', 'Male', 'All-rounder', 33, 'benstokes@example.com', '5558901234', 6),
+('Ellyse Perry', '1990-11-03', 'Female', 'All-rounder', 34, 'ellyseperry@example.com', '5559012345', 6),
+('Jofra Archer', '1995-04-01', 'Male', 'Bowler', 29, 'jofraarcher@example.com', '5550123456', 6),
+
+-- Rugby (Sport_ID = 7)
+('Jonny Wilkinson', '1979-05-25', 'Male', 'Fly-half', 45, 'jonnywilkinson@example.com', '5551234567', 7),
+('Alisha Butchers', '1994-04-03', 'Female', 'Back', 30, 'alishabutcher@example.com', '5552345678', 7),
+('Dan Carter', '1982-03-05', 'Male', 'Fly-half', 42, 'dancarter@example.com', '5553456789', 7),
+('Ruby Tui', '1993-02-09', 'Female', 'Wing', 31, 'rubytui@example.com', '5554567890', 7),
+('Maro Itoje', '1994-10-28', 'Male', 'Lock', 30, 'maroitoje@example.com', '5555678901', 7),
+
+-- Volleyball (Sport_ID = 8)
+('Kerri Walsh', '1978-08-15', 'Female', 'Outside hitter', 46, 'kerriwalsh@example.com', '5556789012', 8),
+('Wilfredo Leon', '1993-08-31', 'Male', 'Outside hitter', 31, 'wilfredoleon@example.com', '5557890123', 8),
+('Tijana Bošković', '1997-11-8', 'Female', 'Opposite hitter', 27, 'tijanabosković@example.com', '5558901234', 8),
+('Max Holt', '1987-11-12', 'Male', 'Middle blocker', 37, 'maxholt@example.com', '5559012345', 8),
+('Maja Ognjenović', '1987-03-06', 'Female', 'Setter', 37, 'majaognjenović@example.com', '5550123456', 8),
+
+-- Handball (Sport_ID = 9)
+('Nikola Karabatić', '1984-04-11', 'Male', 'Center back', 40, 'nikolak@handball.com', '5551234567', 9),
+('Coralie Lassource', '1991-09-23', 'Female', 'Left back', 33, 'coralie@handball.com', '5552345678', 9),
+('Mikkel Hansen', '1987-10-22', 'Male', 'Right back', 37, 'mikkel@handball.com', '5553456789', 9),
+('Allison Pineau', '1988-12-02', 'Female', 'Center', 36, 'allison@handball.com', '5554567890', 9),
+('Valentin Porte', '1991-11-13', 'Male', 'Left wing', 33, 'valentin@handball.com', '5555678901', 9);

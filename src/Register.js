@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Register.css'; // Assuming you have a CSS file for styling
 
 const Register = () => {
@@ -8,21 +8,38 @@ const Register = () => {
     const [phone_no, setPhone_no] = useState('');
     const [dob, setDob] = useState('');
     const [gender, setGender] = useState('');
+    const [selectedSport, setSelectedSport] = useState('');
+    const [sports, setSports] = useState([]); // Store available sports
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    // Fetch sports from the backend when the component mounts
+    useEffect(() => {
+        const fetchSports = async () => {
+            try {
+                const response = await fetch('http://localhost:5001/api/sports');
+                const data = await response.json();
+                setSports(data.sports); // Assuming the response contains an array of sports
+            } catch (error) {
+                console.error('Error fetching sports:', error);
+            }
+        };
+
+        fetchSports();
+    }, []);
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Basic validation to check if all fields are filled
-        if (!username || !password || !email || !phone_no || !dob || !gender) {
+        if (!username || !password || !email || !phone_no || !dob || !gender || !selectedSport) {
             setErrorMessage('Please fill in all fields.');
             setSuccessMessage('');
             return;
         }
 
-        const registerData = { username, password, email, phone_no, dob, gender };
+        const registerData = { username, password, email, phone_no, dob, gender, sport_id: selectedSport };
 
         try {
             const response = await fetch('http://localhost:5001/api/register', {
@@ -87,8 +104,20 @@ const Register = () => {
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
                 </select>
+
+                {/* Dropdown for selecting sport */}
+                <select value={selectedSport} onChange={(e) => setSelectedSport(e.target.value)}>
+                    <option value="">Select Sport</option>
+                    {sports.map((sport) => (
+                        <option key={sport.Sport_ID} value={sport.Sport_ID}>
+                            {sport.Sport_Name}
+                        </option>
+                    ))}
+                </select>
+
                 <button type="submit">Register</button>
             </form>
+
             {errorMessage && <p className="error-message">{errorMessage}</p>}
             {successMessage && <p className="success-message">{successMessage}</p>}
         </div>
