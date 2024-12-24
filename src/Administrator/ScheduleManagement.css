@@ -1,0 +1,166 @@
+/* General Layout */
+.schedule-management {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Flexbox for Boxes (Side by Side) */
+.schedule-management-boxes {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1200px;
+  width: 100%;
+  margin-top: 100px; /* Increased space between top and boxes */
+  flex-wrap: nowrap; /* Ensure no wrapping of the boxes */
+  box-sizing: border-box;
+}
+
+/* Styling for Each Box */
+.box {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  flex: 1; /* Ensure all boxes take equal width */
+  min-width: 280px; /* Prevent boxes from becoming too small */
+  max-width: 380px; /* Control maximum box size */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for Add Event Box */
+.add-event-box {
+  flex: 1 1 30%; /* Each box takes 30% of the space */
+}
+
+/* Styling for Event List Box */
+.event-list-box {
+  flex: 1 1 30%;
+}
+
+/* Event List Search Field */
+.search-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Event List Scrollable List */
+.scrollable-list {
+  max-height: 300px;
+  overflow-y: auto;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.event-item {
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.event-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Event Details Box */
+.event-details-box {
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+/* Event Details */
+.event-details-box h3 {
+  text-align: center;
+  color: #3b5998;
+  margin-bottom: 15px;
+}
+
+.event-details-box p {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.delete-btn {
+  background-color: #ff4d4d;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #e00000;
+}
+
+/* Table Container */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 40px; /* Add space below the event boxes */
+  max-width: 1200px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  word-wrap: break-word;
+}
+
+th {
+  background-color: #3b5998;
+  color: white;
+  font-size: 1.1rem;
+}
+
+td {
+  background-color: #f9f9f9;
+  font-size: 1rem;
+}
+
+/* Heading Style */
+.schedule-management-heading {
+  font-size: 2rem;
+  color: #3b5998;
+  text-align: center;
+  margin-top: 100px; /* Removed padding */
+  ; /* Optional, to create space below the heading */
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+  .schedule-management-boxes {
+    flex-direction: column; /* Stack boxes vertically on smaller screens */
+    align-items: center;
+  }
+
+  .box {
+    width: 100%; /* Boxes take full width on smaller screens */
+    margin-bottom: 20px;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+}

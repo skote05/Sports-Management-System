@@ -1,0 +1,93 @@
+/* src/PlayerStats.css */
+
+.player-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.stats-title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.stats-table {
+  width: 80%;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.stats-table th, .stats-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.stats-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.stats-table td {
+  background-color: #fafafa;
+}
+
+.stats-card {
+  margin-bottom: 20px;
+}
+
+.team-stats-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.team-stats-btn:hover {
+  background-color: #0056b3;
+}
+
+/* src/TeamStats.css */
+
+.team-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.stats-title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.stats-table {
+  width: 80%;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.stats-table th, .stats-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.stats-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.stats-table td {
+  background-color: #fafafa;
+}

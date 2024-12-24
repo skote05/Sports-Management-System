@@ -1,0 +1,60 @@
+/* Basic styling for the CreateTeamForm */
+
+.create-team-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+}
+
+.create-team-form h2 {
+    text-align: center;
+    color: #333;
+}
+
+.create-team-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.create-team-form input,
+.create-team-form select,
+.create-team-form button {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.create-team-form button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.create-team-form button:hover {
+    background-color: #45a049;
+}
+
+.create-team-form .error-message {
+    color: red;
+    text-align: center;
+}
+
+.create-team-form .success-message {
+    color: green;
+    text-align: center;
+}
+
+.create-team-form .selected-players {
+    background-color: #e0ffe0;
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.create-team-form .selected-players div {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
