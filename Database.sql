@@ -600,6 +600,19 @@ VALUES
 (1, 'John Doe', '1980-03-15', 15, 'johndoe@example.com', '555-1234'),   -- Coach_ID = 1
 (2, 'Alice Smith', '1975-07-22', 20, 'alicesmith@example.com', '555-5678'); -- Coach_ID = 2
 
+INSERT INTO Coach (Coach_Name, DOB, Years_of_Experience, Email, Phone_no)
+VALUES 
+('Rajesh Kumar', '1980-06-12', 14, 'rajesh.kumar@example.com', '9876543210'),
+('Priya Sharma', '1985-09-23', 8, 'priya.sharma@example.com', '9887654321'),
+('Anil Reddy', '1977-04-17', 20, 'anil.reddy@example.com', '9056781234'),
+('Sunita Patel', '1990-02-05', 6, 'sunita.patel@example.com', '9912345678'),
+('Vikram Singh', '1982-11-30', 12, 'vikram.singh@example.com', '9001234567'),
+('Neha Desai', '1988-07-25', 7, 'neha.desai@example.com', '9654321098'),
+('Krishna Prasad', '1975-01-13', 22, 'krishna.prasad@example.com', '9328745601'),
+('Sanya Gupta', '1992-03-19', 5, 'sanya.gupta@example.com', '9456738910'),
+('Suresh Nair', '1980-11-01', 16, 'suresh.nair@example.com', '9209876543'),
+('Shalini Iyer', '1987-08-21', 9, 'shalini.iyer@example.com', '9792345678');
+
 -- Inserting data into Team Table (with explicit Team_IDs and Sport_IDs)
 INSERT INTO Team (Team_ID, Team_name, Max_Team_Size, Sport_ID)
 VALUES 
@@ -1025,3 +1038,83 @@ VALUES
 ('Mikkel Hansen', '1987-10-22', 'Male', 'Right back', 37, 'mikkel@handball.com', '5553456789', 9),
 ('Allison Pineau', '1988-12-02', 'Female', 'Center', 36, 'allison@handball.com', '5554567890', 9),
 ('Valentin Porte', '1991-11-13', 'Male', 'Left wing', 33, 'valentin@handball.com', '5555678901', 9);
+
+ALTER TABLE Venue
+ADD Sport_ID INT,
+ADD FOREIGN KEY (Sport_ID) REFERENCES Sport(Sport_ID);
+INSERT INTO Venue (Venue_Name, Location, Sport_ID)
+VALUES 
+    ('Cricket Ground', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Cricket')),
+    ('Football Court', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Football')),
+    ('Basketball Court', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Basketball')),
+    ('Badminton Court', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Badminton')),
+    ('Table Tennis Court', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Table Tennis')),
+    ('Rugby Field', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Rugby')),
+    ('Hockey Field', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Hockey')),
+    ('Baseball Ground', 'Bengaluru', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Baseball'));
+
+INSERT INTO Venue (Venue_Name, Location, Sport_ID)
+VALUES 
+    ('Cricket Ground', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Cricket')),
+    ('Football Court', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Football')),
+    ('Basketball Court', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Basketball')),
+    ('Badminton Court', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Badminton')),
+    ('Table Tennis Court', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Table Tennis')),
+    ('Rugby Field', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Rugby')),
+    ('Hockey Field', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Hockey')),
+    ('Baseball Ground', 'Mumbai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Baseball'));
+
+INSERT INTO Venue (Venue_Name, Location, Sport_ID)
+VALUES 
+    ('Cricket Ground', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Cricket')),
+    ('Football Court', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Football')),
+    ('Basketball Court', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Basketball')),
+    ('Badminton Court', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Badminton')),
+    ('Table Tennis Court', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Table Tennis')),
+    ('Rugby Field', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Rugby')),
+    ('Hockey Field', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Hockey')),
+    ('Baseball Ground', 'Delhi', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Baseball'));
+
+INSERT INTO Venue (Venue_Name, Location, Sport_ID)
+VALUES 
+    ('Cricket Ground', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Cricket')),
+    ('Football Court', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Football')),
+    ('Basketball Court', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Basketball')),
+    ('Badminton Court', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Badminton')),
+    ('Table Tennis Court', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Table Tennis')),
+    ('Rugby Field', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Rugby')),
+    ('Hockey Field', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Hockey')),
+    ('Baseball Ground', 'Chennai', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Baseball'));
+
+INSERT INTO Venue (Venue_Name, Location, Sport_ID)
+VALUES 
+    ('Cricket Ground', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Cricket')),
+    ('Football Court', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Football')),
+    ('Basketball Court', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Basketball')),
+    ('Badminton Court', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Badminton')),
+    ('Table Tennis Court', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Table Tennis')),
+    ('Rugby Field', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Rugby')),
+    ('Hockey Field', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Hockey')),
+    ('Baseball Ground', 'Hyderabad', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Baseball'));
+
+INSERT INTO Venue (Venue_Name, Location, Sport_ID)
+VALUES 
+    ('Cricket Ground', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Cricket')),
+    ('Football Court', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Football')),
+    ('Basketball Court', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Basketball')),
+    ('Badminton Court', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Badminton')),
+    ('Table Tennis Court', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Table Tennis')),
+    ('Rugby Field', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Rugby')),
+    ('Hockey Field', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Hockey')),
+    ('Baseball Ground', 'Kolkata', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Baseball'));
+
+INSERT INTO Venue (Venue_Name, Location, Sport_ID)
+VALUES 
+    ('Cricket Ground', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Cricket')),
+    ('Football Court', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Football')),
+    ('Basketball Court', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Basketball')),
+    ('Badminton Court', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Badminton')),
+    ('Table Tennis Court', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Table Tennis')),
+    ('Rugby Field', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Rugby')),
+    ('Hockey Field', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Hockey')),
+    ('Baseball Ground', 'Gurgaon', (SELECT Sport_ID FROM Sport WHERE Sport_Name = 'Baseball'));

@@ -95,20 +95,8 @@ const PlayerDashboard = () => {
                             View Schedule
                         </button>
                     </div>
-                    <div className="card">
-                        <h3>Health And Fitness</h3>
-                        <p>Track your fitness goals and health data</p>
-                        <button className="action-button">
-                            Track Health
-                        </button>
-                    </div>
-                    <div className="card">
-                        <h3>Payments And Subscriptions</h3>
-                        <p>Make payments for subscriptions.</p>
-                        <button className="action-button" onClick={handleMakePaymentClick}>
-                            Make Payments
-                        </button>
-                    </div>
+                    
+                   
                 </div>
 
                 {/* Team Stats Table */}
